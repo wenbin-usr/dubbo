@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1400" font-family="'Segoe UI','Microsoft YaHei','PingFang SC',Helvetica,Arial,sans-serif">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7fafe"/>
+      <stop offset="0.55" stop-color="#eef3fb"/>
+      <stop offset="1" stop-color="#e7ecf5"/>
+    </linearGradient>
+    <radialGradient id="bgGlow" cx="0.5" cy="0.12" r="0.7">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Title gradient -->
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e3a8a"/>
+      <stop offset="0.5" stop-color="#4338ca"/>
+      <stop offset="1" stop-color="#0e7490"/>
+    </linearGradient>
+
+    <!-- Soft card shadow -->
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="off"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.16"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4.5"/>
+      <feOffset dx="0" dy="3" result="off"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Layer header pill gradient -->
+    <linearGradient id="hdrBusiness" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6366f1"/><stop offset="1" stop-color="#818cf8"/></linearGradient>
+    <linearGradient id="hdrConfig"   x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0284c7"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+    <linearGradient id="hdrCluster"  x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+    <linearGradient id="hdrRpc"      x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#db2777"/><stop offset="1" stop-color="#f472b6"/></linearGradient>
+    <linearGradient id="hdrReg"      x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#059669"/><stop offset="1" stop-color="#34d399"/></linearGradient>
+    <linearGradient id="hdrRem"      x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ea580c"/><stop offset="1" stop-color="#fb923c"/></linearGradient>
+    <linearGradient id="hdrSer"      x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0d9488"/><stop offset="1" stop-color="#2dd4bf"/></linearGradient>
+    <linearGradient id="hdrCommon"  x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#475569"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+    <linearGradient id="hdrCross"    x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d4ed8"/><stop offset="1" stop-color="#3b82f6"/></linearGradient>
+
+    <!-- Topology node gradients -->
+    <linearGradient id="regGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+    <linearGradient id="consGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e0f2fe"/></linearGradient>
+    <linearGradient id="provGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dcfce7"/></linearGradient>
+    <linearGradient id="monGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#fae8ff"/></linearGradient>
+
+    <!-- Arrowheads -->
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#059669"/>
+    </marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d97706"/>
+    </marker>
+    <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6">
+      <circle cx="5" cy="5" r="4" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- ===================== BACKGROUND ===================== -->
+  <rect width="1680" height="1400" fill="url(#bg)"/>
+  <rect width="1680" height="1400" fill="url(#bgGlow)"/>
+
+  <!-- ===================== TITLE ===================== -->
+  <rect x="0" y="0" width="1680" height="84" fill="url(#titleGrad)"/>
+  <text x="60" y="44" font-size="30" font-weight="700" fill="#ffffff" letter-spacing="0.5">Apache Dubbo 3.3 · 架构总览</text>
+  <text x="60" y="68" font-size="14" fill="#dbeafe" letter-spacing="0.3">源码模块分层 · Runtime Topology &amp; Layered Architecture</text>
+  <text x="1620" y="44" font-size="14" fill="#bfdbfe" text-anchor="end" font-weight="600">RPC · Service Discovery · Traffic · Observability</text>
+  <text x="1620" y="68" font-size="12" fill="#c7d2fe" text-anchor="end">github.com/apache/dubbo (branch 3.3)</text>
+
+  <!-- ===================== SECTION A : RUNTIME TOPOLOGY ===================== -->
+  <g id="topology">
+    <rect x="40" y="100" width="1600" height="350" rx="16" fill="#ffffff" fill-opacity="0.7" stroke="#dbe4f0" stroke-width="1"/>
+    <text x="64" y="128" font-size="15" font-weight="700" fill="#1e293b">① 运行时调用拓扑 / Runtime Topology</text>
+    <text x="64" y="146" font-size="12" fill="#64748b">Consumer 与 Provider 通过 Registry 动态发现，调用链路经 Cluster 治理后由 RPC/Remoting 完成通信，并由 Monitor 采集指标</text>
+
+    <!-- Registry -->
+    <rect x="690" y="150" width="300" height="74" rx="12" fill="url(#regGrad)" stroke="#6366f1" stroke-width="1.5" filter="url(#softShadow)"/>
+    <text x="840" y="180" font-size="16" font-weight="700" fill="#3730a3" text-anchor="middle">Registry 注册中心</text>
+    <text x="840" y="201" font-size="11" fill="#64748b" text-anchor="middle">Nacos · Zookeeper · Multicast · Multiple</text>
+    <text x="840" y="216" font-size="10" fill="#94a3b8" text-anchor="middle">dubbo-registry-api + 实现</text>
+
+    <!-- Consumer -->
+    <rect x="150" y="280" width="320" height="110" rx="12" fill="url(#consGrad)" stroke="#0284c7" stroke-width="1.5" filter="url(#softShadow)"/>
+    <text x="310" y="310" font-size="16" font-weight="700" fill="#075985" text-anchor="middle">Consumer 消费方</text>
+    <text x="310" y="330" font-size="11" fill="#64748b" text-anchor="middle">ReferenceConfig → Proxy → Invoker</text>
+    <text x="310" y="350" font-size="11" fill="#64748b" text-anchor="middle">Cluster: Directory / Router / LB</text>
+    <text x="310" y="370" font-size="10" fill="#94a3b8" text-anchor="middle">订阅服务地址 · 异步调用 · 流量治理</text>
+
+    <!-- Provider -->
+    <rect x="1210" y="280" width="320" height="110" rx="12" fill="url(#provGrad)" stroke="#059669" stroke-width="1.5" filter="url(#softShadow)"/>
+    <text x="1370" y="310" font-size="16" font-weight="700" fill="#065f46" text-anchor="middle">Provider 服务提供方</text>
+    <text x="1370" y="330" font-size="11" fill="#64748b" text-anchor="middle">ServiceConfig → Exporter → Invoker</text>
+    <text x="1370" y="350" font-size="11" fill="#64748b" text-anchor="middle">Protocol: Triple / Dubbo / Injvm</text>
+    <text x="1370" y="370" font-size="10" fill="#94a3b8" text-anchor="middle">注册服务地址 · 处理请求 · 返回结果</text>
+
+    <!-- Monitor -->
+    <rect x="690" y="360" width="300" height="64" rx="12" fill="url(#monGrad)" stroke="#9333ea" stroke-width="1.5" filter="url(#softShadow)"/>
+    <text x="840" y="386" font-size="15" font-weight="700" fill="#6b21a8" text-anchor="middle">Monitor 监控</text>
+    <text x="840" y="406" font-size="10" fill="#64748b" text-anchor="middle">Metrics · Tracing · Prometheus · OTLP</text>
+
+    <!-- Flow arrows with numbered steps -->
+    <!-- 1. Provider -> Registry (register) -->
+    <path d="M 1210 300 C 1080 300, 1000 230, 990 200" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arrGreen)"/>
+    <circle cx="1110" cy="250" r="13" fill="#059669"/><text x="1110" y="254" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+    <text x="1110" y="276" font-size="10" fill="#059669" text-anchor="middle" font-weight="600">注册 register</text>
+
+    <!-- 2. Registry -> Consumer (notify/subscribe) -->
+    <path d="M 690 200 C 580 230, 500 270, 470 295" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrBlue)"/>
+    <circle cx="570" cy="250" r="13" fill="#2563eb"/><text x="570" y="254" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+    <text x="570" y="276" font-size="10" fill="#2563eb" text-anchor="middle" font-weight="600">订阅/通知 subscribe</text>
+
+    <!-- 3. Consumer -> Provider (invoke RPC) -->
+    <path d="M 470 335 L 1210 335" fill="none" stroke="#64748b" stroke-width="2.2" stroke-dasharray="7 4" marker-end="url(#arr)"/>
+    <circle cx="840" cy="335" r="13" fill="#475569"/><text x="840" y="339" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+    <text x="840" y="318" font-size="10" fill="#475569" text-anchor="middle" font-weight="600">远程调用 invoke (RPC)</text>
+
+    <!-- 4. Consumer -> Monitor (count) -->
+    <path d="M 310 390 C 400 470, 600 440, 700 400" fill="none" stroke="#9333ea" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+    <circle cx="500" cy="445" r="12" fill="#9333ea"/><text x="500" y="449" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+
+    <!-- 5. Provider -> Monitor (count) -->
+    <path d="M 1370 390 C 1280 470, 1080 440, 980 400" fill="none" stroke="#9333ea" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+    <circle cx="1180" cy="445" r="12" fill="#9333ea"/><text x="1180" y="449" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
+    <text x="840" y="438" font-size="10" fill="#9333ea" text-anchor="middle" font-weight="600">指标上报 metrics</text>
+  </g>
+
+  <!-- Divider -->
+  <line x1="40" y1="466" x2="1640" y2="466" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 4"/>
+
+  <!-- ===================== SECTION B : LAYERED ARCHITECTURE ===================== -->
+  <g id="layers">
+    <text x="60" y="496" font-size="15" font-weight="700" fill="#1e293b">② 分层架构 / Layered Architecture</text>
+    <text x="60" y="514" font-size="12" fill="#64748b">上层依赖下层；每一层均为可扩展 SPI，模块名对应 dubbo 源码子工程</text>
+
+    <!-- ===== Cross-cutting panel (right) ===== -->
+    <rect x="1380" y="530" width="260" height="780" rx="14" fill="#1e3a8a" fill-opacity="0.06" stroke="#3b82f6" stroke-width="1" stroke-dasharray="4 3"/>
+    <rect x="1380" y="530" width="260" height="44" rx="14" fill="url(#hdrCross)"/>
+    <rect x="1380" y="560" width="260" height="14" fill="url(#hdrCross)"/>
+    <text x="1510" y="558" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">横切关注点 Cross-Cutting</text>
+
+    <!-- Observability -->
+    <rect x="1400" y="592" width="220" height="120" rx="9" fill="#ffffff" filter="url(#cardShadow)"/>
+    <rect x="1400" y="592" width="5" height="120" rx="2" fill="#3b82f6"/>
+    <text x="1416" y="614" font-size="13" font-weight="700" fill="#1e3a8a">可观测性 Observability</text>
+    <text x="1416" y="634" font-size="11" fill="#475569">• dubbo-metrics-api / default</text>
+    <text x="1416" y="652" font-size="11" fill="#475569">• dubbo-metrics-prometheus</text>
+    <text x="1416" y="670" font-size="11" fill="#475569">• dubbo-metrics-otlp / netty</text>
+    <text x="1416" y="688" font-size="11" fill="#475569">• dubbo-tracing (链路追踪)</text>
+    <text x="1416" y="706" font-size="10" fill="#94a3b8">registry / metadata / config-center metrics</text>
+
+    <!-- Plugins -->
+    <rect x="1400" y="726" width="220" height="216" rx="9" fill="#ffffff" filter="url(#cardShadow)"/>
+    <rect x="1400" y="726" width="5" height="216" rx="2" fill="#3b82f6"/>
+    <text x="1416" y="748" font-size="13" font-weight="700" fill="#1e3a8a">插件 Plugins</text>
+    <text x="1416" y="768" font-size="11" fill="#475569">• dubbo-auth · dubbo-security</text>
+    <text x="1416" y="786" font-size="11" fill="#475569">• dubbo-spring-security</text>
+    <text x="1416" y="804" font-size="11" fill="#475569">• dubbo-spring6-security</text>
+    <text x="1416" y="822" font-size="11" fill="#475569">• dubbo-qos (在线运维命令)</text>
+    <text x="1416" y="840" font-size="11" fill="#475569">• dubbo-filter-cache / validation</text>
+    <text x="1416" y="858" font-size="11" fill="#475569">• dubbo-rest-jaxrs / openapi</text>
+    <text x="1416" y="876" font-size="11" fill="#475569">• dubbo-rest-spring</text>
+    <text x="1416" y="894" font-size="11" fill="#475569">• dubbo-reactive · dubbo-mutiny</text>
+    <text x="1416" y="912" font-size="11" fill="#475569">• dubbo-native (GraalVM)</text>
+    <text x="1416" y="930" font-size="11" fill="#475569">• dubbo-mcp · loom · compiler</text>
+
+    <!-- Config Center -->
+    <rect x="1400" y="956" width="220" height="104" rx="9" fill="#ffffff" filter="url(#cardShadow)"/>
+    <rect x="1400" y="956" width="5" height="104" rx="2" fill="#3b82f6"/>
+    <text x="1416" y="978" font-size="13" font-weight="700" fill="#1e3a8a">配置中心 ConfigCenter</text>
+    <text x="1416" y="998" font-size="11" fill="#475569">• dubbo-configcenter-apollo</text>
+    <text x="1416" y="1016" font-size="11" fill="#475569">• dubbo-configcenter-nacos</text>
+    <text x="1416" y="1034" font-size="11" fill="#475569">• dubbo-configcenter-zookeeper</text>
+    <text x="1416" y="1052" font-size="11" fill="#475569">• dubbo-configcenter-file</text>
+
+    <!-- Metadata -->
+    <rect x="1400" y="1074" width="220" height="118" rx="9" fill="#ffffff" filter="url(#cardShadow)"/>
+    <rect x="1400" y="1074" width="5" height="118" rx="2" fill="#3b82f6"/>
+    <text x="1416" y="1096" font-size="13" font-weight="700" fill="#1e3a8a">元数据 Metadata</text>
+    <text x="1416" y="1116" font-size="11" fill="#475569">• dubbo-metadata-api</text>
+    <text x="1416" y="1134" font-size="11" fill="#475569">• dubbo-metadata-report-nacos</text>
+    <text x="1416" y="1152" font-size="11" fill="#475569">• dubbo-metadata-report-zookeeper</text>
+    <text x="1416" y="1170" font-size="11" fill="#475569">• metadata-processor / protobuf</text>
+    <text x="1416" y="1186" font-size="10" fill="#94a3b8">接口级 / 应用级元数据存储</text>
+
+    <!-- ===== Layer rows ===== -->
+
+    <!-- L1: Business / Application -->
+    <g>
+      <rect x="60" y="530" width="1300" height="92" rx="10" fill="#6366f1" fill-opacity="0.05" stroke="#c7d2fe" stroke-width="1"/>
+      <rect x="60" y="530" width="150" height="92" rx="10" fill="url(#hdrBusiness)"/>
+      <rect x="200" y="530" width="10" height="92" fill="url(#hdrBusiness)"/>
+      <text x="135" y="572" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">业务层</text>
+      <text x="135" y="592" font-size="11" fill="#e0e7ff" text-anchor="middle">Business / App</text>
+      <!-- consumer app -->
+      <rect x="230" y="548" width="300" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="548" width="4" height="56" rx="2" fill="#6366f1"/>
+      <text x="246" y="572" font-size="12" font-weight="700" fill="#1e293b">Consumer 业务应用</text>
+      <text x="246" y="590" font-size="10.5" fill="#64748b">@DubboReference · 注入远程代理</text>
+      <!-- provider app -->
+      <rect x="550" y="548" width="300" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="550" y="548" width="4" height="56" rx="2" fill="#6366f1"/>
+      <text x="566" y="572" font-size="12" font-weight="700" fill="#1e293b">Provider 业务应用</text>
+      <text x="566" y="590" font-size="10.5" fill="#64748b">@DubboService · 暴露业务接口</text>
+      <!-- interface -->
+      <rect x="870" y="548" width="300" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="870" y="548" width="4" height="56" rx="2" fill="#6366f1"/>
+      <text x="886" y="572" font-size="12" font-weight="700" fill="#1e293b">Service Interface 业务接口</text>
+      <text x="886" y="590" font-size="10.5" fill="#64748b">IDL(Proto) / Java Interface 共享契约</text>
+      <!-- spring boot -->
+      <rect x="1190" y="548" width="150" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="1190" y="548" width="4" height="56" rx="2" fill="#6366f1"/>
+      <text x="1206" y="572" font-size="12" font-weight="700" fill="#1e293b">Spring Boot</text>
+      <text x="1206" y="590" font-size="10.5" fill="#64748b">dubbo-spring-boot-starter</text>
+    </g>
+
+    <!-- L2: Config -->
+    <g>
+      <rect x="60" y="632" width="1300" height="92" rx="10" fill="#0284c7" fill-opacity="0.05" stroke="#bae6fd" stroke-width="1"/>
+      <rect x="60" y="632" width="150" height="92" rx="10" fill="url(#hdrConfig)"/>
+      <rect x="200" y="632" width="10" height="92" fill="url(#hdrConfig)"/>
+      <text x="135" y="674" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">配置层</text>
+      <text x="135" y="694" font-size="11" fill="#e0f2fe" text-anchor="middle">Config</text>
+
+      <rect x="230" y="650" width="380" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="650" width="4" height="56" rx="2" fill="#0284c7"/>
+      <text x="246" y="674" font-size="12" font-weight="700" fill="#1e293b">dubbo-config-api</text>
+      <text x="246" y="692" font-size="10.5" fill="#64748b">ServiceConfig / ReferenceConfig · Bootstrap · 启动装配</text>
+
+      <rect x="630" y="650" width="280" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="630" y="650" width="4" height="56" rx="2" fill="#0284c7"/>
+      <text x="646" y="674" font-size="12" font-weight="700" fill="#1e293b">dubbo-config-spring</text>
+      <text x="646" y="692" font-size="10.5" fill="#64748b">Spring XML / 注解集成 · Bean 解析</text>
+
+      <rect x="930" y="650" width="280" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="930" y="650" width="4" height="56" rx="2" fill="#0284c7"/>
+      <text x="946" y="674" font-size="12" font-weight="700" fill="#1e293b">dubbo-config-spring6</text>
+      <text x="946" y="692" font-size="10.5" fill="#64748b">Spring 6 / Boot 3 适配</text>
+
+      <rect x="1230" y="650" width="110" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="1230" y="650" width="4" height="56" rx="2" fill="#0284c7"/>
+      <text x="1246" y="674" font-size="12" font-weight="700" fill="#1e293b">compatible</text>
+      <text x="1246" y="692" font-size="10.5" fill="#64748b">2.x 兼容</text>
+    </g>
+
+    <!-- L3: Cluster / Governance -->
+    <g>
+      <rect x="60" y="734" width="1300" height="92" rx="10" fill="#7c3aed" fill-opacity="0.05" stroke="#ddd6fe" stroke-width="1"/>
+      <rect x="60" y="734" width="150" height="92" rx="10" fill="url(#hdrCluster)"/>
+      <rect x="200" y="734" width="10" height="92" fill="url(#hdrCluster)"/>
+      <text x="135" y="770" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">服务治理</text>
+      <text x="135" y="790" font-size="11" fill="#ede9fe" text-anchor="middle">Cluster</text>
+      <text x="135" y="806" font-size="9.5" fill="#ddd6fe" text-anchor="middle">dubbo-cluster</text>
+
+      <rect x="230" y="752" width="240" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="752" width="4" height="56" rx="2" fill="#7c3aed"/>
+      <text x="246" y="776" font-size="12" font-weight="700" fill="#1e293b">Cluster 容错策略</text>
+      <text x="246" y="794" font-size="10.5" fill="#64748b">Failover · Failfast · Forking · Broadcast</text>
+
+      <rect x="490" y="752" width="220" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="490" y="752" width="4" height="56" rx="2" fill="#7c3aed"/>
+      <text x="506" y="776" font-size="12" font-weight="700" fill="#1e293b">LoadBalance 负载均衡</text>
+      <text x="506" y="794" font-size="10.5" fill="#64748b">Random · RoundRobin · LeastActive · ShortestResponse</text>
+
+      <rect x="730" y="752" width="200" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="730" y="752" width="4" height="56" rx="2" fill="#7c3aed"/>
+      <text x="746" y="776" font-size="12" font-weight="700" fill="#1e293b">Router 路由</text>
+      <text x="746" y="794" font-size="10.5" fill="#64748b">条件 / 标签 / Mesh / Affinity 路由</text>
+
+      <rect x="950" y="752" width="200" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="950" y="752" width="4" height="56" rx="2" fill="#7c3aed"/>
+      <text x="966" y="776" font-size="12" font-weight="700" fill="#1e293b">Directory 目录</text>
+      <text x="966" y="794" font-size="10.5" fill="#64748b">StaticDirectory · RegistryDirectory</text>
+
+      <rect x="1170" y="752" width="170" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="1170" y="752" width="4" height="56" rx="2" fill="#7c3aed"/>
+      <text x="1186" y="776" font-size="12" font-weight="700" fill="#1e293b">Mock / 降级</text>
+      <text x="1186" y="794" font-size="10.5" fill="#64748b">本地伪装 · 容错回调</text>
+    </g>
+
+    <!-- L4: RPC -->
+    <g>
+      <rect x="60" y="836" width="1300" height="92" rx="10" fill="#db2777" fill-opacity="0.05" stroke="#fbcfe8" stroke-width="1"/>
+      <rect x="60" y="836" width="150" height="92" rx="10" fill="url(#hdrRpc)"/>
+      <rect x="200" y="836" width="10" height="92" fill="url(#hdrRpc)"/>
+      <text x="135" y="872" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">RPC 协议</text>
+      <text x="135" y="892" font-size="11" fill="#fce7f3" text-anchor="middle">dubbo-rpc</text>
+      <text x="135" y="908" font-size="9.5" fill="#fbcfe8" text-anchor="middle">Protocol / Invoker</text>
+
+      <rect x="230" y="854" width="290" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="854" width="4" height="56" rx="2" fill="#db2777"/>
+      <text x="246" y="878" font-size="12" font-weight="700" fill="#1e293b">dubbo-rpc-api</text>
+      <text x="246" y="896" font-size="10.5" fill="#64748b">Protocol SPI · Invoker · Filter · ProxyFactory</text>
+
+      <rect x="540" y="854" width="290" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="540" y="854" width="4" height="56" rx="2" fill="#db2777"/>
+      <text x="556" y="878" font-size="12" font-weight="700" fill="#1e293b">dubbo-rpc-triple ★</text>
+      <text x="556" y="896" font-size="10.5" fill="#64748b">HTTP/2 · gRPC 兼容 · 流式 · cURL 可调</text>
+
+      <rect x="850" y="854" width="240" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="850" y="854" width="4" height="56" rx="2" fill="#db2777"/>
+      <text x="866" y="878" font-size="12" font-weight="700" fill="#1e293b">dubbo-rpc-dubbo</text>
+      <text x="866" y="896" font-size="10.5" fill="#64748b">Dubbo2 TCP 协议 · 长连接</text>
+
+      <rect x="1110" y="854" width="230" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="1110" y="854" width="4" height="56" rx="2" fill="#db2777"/>
+      <text x="1126" y="878" font-size="12" font-weight="700" fill="#1e293b">dubbo-rpc-injvm</text>
+      <text x="1126" y="896" font-size="10.5" fill="#64748b">同 JVM 直连 · 本地短路调用</text>
+    </g>
+
+    <!-- L5: Registry -->
+    <g>
+      <rect x="60" y="938" width="1300" height="92" rx="10" fill="#059669" fill-opacity="0.05" stroke="#bbf7d0" stroke-width="1"/>
+      <rect x="60" y="938" width="150" height="92" rx="10" fill="url(#hdrReg)"/>
+      <rect x="200" y="938" width="10" height="92" fill="url(#hdrReg)"/>
+      <text x="135" y="974" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">注册中心</text>
+      <text x="135" y="994" font-size="11" fill="#d1fae5" text-anchor="middle">dubbo-registry</text>
+      <text x="135" y="1010" font-size="9.5" fill="#bbf7d0" text-anchor="middle">服务发现</text>
+
+      <rect x="230" y="956" width="260" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="956" width="4" height="56" rx="2" fill="#059669"/>
+      <text x="246" y="980" font-size="12" font-weight="700" fill="#1e293b">dubbo-registry-api</text>
+      <text x="246" y="998" font-size="10.5" fill="#64748b">RegistryFactory SPI · 注册/订阅/通知</text>
+
+      <rect x="510" y="956" width="200" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="510" y="956" width="4" height="56" rx="2" fill="#059669"/>
+      <text x="526" y="980" font-size="12" font-weight="700" fill="#1e293b">registry-nacos</text>
+      <text x="526" y="998" font-size="10.5" fill="#64748b">Nacos 注册中心实现</text>
+
+      <rect x="730" y="956" width="200" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="730" y="956" width="4" height="56" rx="2" fill="#059669"/>
+      <text x="746" y="980" font-size="12" font-weight="700" fill="#1e293b">registry-zookeeper</text>
+      <text x="746" y="998" font-size="10.5" fill="#64748b">Zookeeper 注册中心实现</text>
+
+      <rect x="950" y="956" width="190" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="950" y="956" width="4" height="56" rx="2" fill="#059669"/>
+      <text x="966" y="980" font-size="12" font-weight="700" fill="#1e293b">registry-multicast</text>
+      <text x="966" y="998" font-size="10.5" fill="#64748b">组播发现</text>
+
+      <rect x="1160" y="956" width="180" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="1160" y="956" width="4" height="56" rx="2" fill="#059669"/>
+      <text x="1176" y="980" font-size="12" font-weight="700" fill="#1e293b">registry-multiple</text>
+      <text x="1176" y="998" font-size="10.5" fill="#64748b">多注册中心聚合</text>
+    </g>
+
+    <!-- L6: Remoting -->
+    <g>
+      <rect x="60" y="1040" width="1300" height="92" rx="10" fill="#ea580c" fill-opacity="0.05" stroke="#fed7aa" stroke-width="1"/>
+      <rect x="60" y="1040" width="150" height="92" rx="10" fill="url(#hdrRem)"/>
+      <rect x="200" y="1040" width="10" height="92" fill="url(#hdrRem)"/>
+      <text x="135" y="1076" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">远程通信</text>
+      <text x="135" y="1096" font-size="11" fill="#ffedd5" text-anchor="middle">dubbo-remoting</text>
+      <text x="135" y="1112" font-size="9.5" fill="#fed7aa" text-anchor="middle">Transport / Exchange</text>
+
+      <rect x="230" y="1058" width="240" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="1058" width="4" height="56" rx="2" fill="#ea580c"/>
+      <text x="246" y="1082" font-size="12" font-weight="700" fill="#1e293b">dubbo-remoting-api</text>
+      <text x="246" y="1100" font-size="10.5" fill="#64748b">Transporter · Exchange · Codec · Telnet</text>
+
+      <rect x="490" y="1058" width="210" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="490" y="1058" width="4" height="56" rx="2" fill="#ea580c"/>
+      <text x="506" y="1082" font-size="12" font-weight="700" fill="#1e293b">remoting-netty4</text>
+      <text x="506" y="1100" font-size="10.5" fill="#64748b">Netty 4 NIO 传输</text>
+
+      <rect x="720" y="1058" width="210" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="720" y="1058" width="4" height="56" rx="2" fill="#ea580c"/>
+      <text x="736" y="1082" font-size="12" font-weight="700" fill="#1e293b">remoting-http12</text>
+      <text x="736" y="1100" font-size="10.5" fill="#64748b">HTTP/2 底层支持</text>
+
+      <rect x="950" y="1058" width="190" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="950" y="1058" width="4" height="56" rx="2" fill="#ea580c"/>
+      <text x="966" y="1082" font-size="12" font-weight="700" fill="#1e293b">remoting-http3</text>
+      <text x="966" y="1100" font-size="10.5" fill="#64748b">HTTP/3 (QUIC)</text>
+
+      <rect x="1160" y="1058" width="180" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="1160" y="1058" width="4" height="56" rx="2" fill="#ea580c"/>
+      <text x="1176" y="1082" font-size="12" font-weight="700" fill="#1e293b">websocket</text>
+      <text x="1176" y="1100" font-size="10.5" fill="#64748b">+ zookeeper-curator5</text>
+    </g>
+
+    <!-- L7: Serialization -->
+    <g>
+      <rect x="60" y="1142" width="1300" height="92" rx="10" fill="#0d9488" fill-opacity="0.05" stroke="#99f6e4" stroke-width="1"/>
+      <rect x="60" y="1142" width="150" height="92" rx="10" fill="url(#hdrSer)"/>
+      <rect x="200" y="1142" width="10" height="92" fill="url(#hdrSer)"/>
+      <text x="135" y="1178" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">序列化</text>
+      <text x="135" y="1198" font-size="11" fill="#ccfbf1" text-anchor="middle">dubbo-serialization</text>
+      <text x="135" y="1214" font-size="9.5" fill="#99f6e4" text-anchor="middle">Serialization SPI</text>
+
+      <rect x="230" y="1160" width="300" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="1160" width="4" height="56" rx="2" fill="#0d9488"/>
+      <text x="246" y="1184" font-size="12" font-weight="700" fill="#1e293b">dubbo-serialization-api</text>
+      <text x="246" y="1202" font-size="10.5" fill="#64748b">Serialization SPI · ObjectInput/Output</text>
+
+      <rect x="550" y="1160" width="300" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="550" y="1160" width="4" height="56" rx="2" fill="#0d9488"/>
+      <text x="566" y="1184" font-size="12" font-weight="700" fill="#1e293b">serialization-fastjson2</text>
+      <text x="566" y="1202" font-size="10.5" fill="#64748b">Fastjson2 · 高性能 JSON</text>
+
+      <rect x="870" y="1160" width="280" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="870" y="1160" width="4" height="56" rx="2" fill="#0d9488"/>
+      <text x="886" y="1184" font-size="12" font-weight="700" fill="#1e293b">serialization-hessian2</text>
+      <text x="886" y="1202" font-size="10.5" fill="#64748b">Hessian2 · 跨语言二进制</text>
+
+      <rect x="1170" y="1160" width="170" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="1170" y="1160" width="4" height="56" rx="2" fill="#0d9488"/>
+      <text x="1186" y="1184" font-size="12" font-weight="700" fill="#1e293b">protobuf</text>
+      <text x="1186" y="1202" font-size="10.5" fill="#64748b">Protobuf (Triple)</text>
+    </g>
+
+    <!-- L8: Common / SPI -->
+    <g>
+      <rect x="60" y="1244" width="1300" height="92" rx="10" fill="#475569" fill-opacity="0.05" stroke="#cbd5e1" stroke-width="1"/>
+      <rect x="60" y="1244" width="150" height="92" rx="10" fill="url(#hdrCommon)"/>
+      <rect x="200" y="1244" width="10" height="92" fill="url(#hdrCommon)"/>
+      <text x="135" y="1280" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">基础公共</text>
+      <text x="135" y="1300" font-size="11" fill="#e2e8f0" text-anchor="middle">dubbo-common</text>
+      <text x="135" y="1316" font-size="9.5" fill="#cbd5e1" text-anchor="middle">SPI 基座</text>
+
+      <rect x="230" y="1262" width="430" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="230" y="1262" width="4" height="56" rx="2" fill="#475569"/>
+      <text x="246" y="1286" font-size="12" font-weight="700" fill="#1e293b">ExtensionLoader (Dubbo SPI 核心)</text>
+      <text x="246" y="1304" font-size="10.5" fill="#64748b">@SPI / @Adaptive / @Activate · IoC + AOP · 自适应扩展</text>
+
+      <rect x="680" y="1262" width="280" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="680" y="1262" width="4" height="56" rx="2" fill="#475569"/>
+      <text x="696" y="1286" font-size="12" font-weight="700" fill="#1e293b">common · 通用工具</text>
+      <text x="696" y="1304" font-size="10.5" fill="#64748b">URL · Logger · 线程池 · 时间轮 · 资源</text>
+
+      <rect x="980" y="1262" width="360" height="56" rx="8" fill="#ffffff" filter="url(#cardShadow)"/>
+      <rect x="980" y="1262" width="4" height="56" rx="2" fill="#475569"/>
+      <text x="996" y="1286" font-size="12" font-weight="700" fill="#1e293b">dubbo-distribution · bom</text>
+      <text x="996" y="1304" font-size="10.5" fill="#64748b">dubbo-all · 依赖管理 · 打包聚合</text>
+    </g>
+  </g>
+
+  <!-- ===================== FOOTER LEGEND ===================== -->
+  <g id="legend">
+    <rect x="40" y="1352" width="1600" height="34" rx="8" fill="#ffffff" fill-opacity="0.7" stroke="#dbe4f0" stroke-width="1"/>
+    <text x="60" y="1373" font-size="11.5" font-weight="700" fill="#1e293b">图例：</text>
+
+    <line x1="110" y1="1369" x2="150" y2="1369" stroke="#64748b" stroke-width="2.2" stroke-dasharray="7 4" marker-end="url(#arr)"/>
+    <text x="158" y="1373" font-size="11" fill="#475569">RPC 调用</text>
+
+    <line x1="230" y1="1369" x2="270" y2="1369" stroke="#2563eb" stroke-width="2" marker-end="url(#arrBlue)"/>
+    <text x="278" y="1373" font-size="11" fill="#475569">订阅/通知</text>
+
+    <line x1="360" y1="1369" x2="400" y2="1369" stroke="#059669" stroke-width="2" marker-end="url(#arrGreen)"/>
+    <text x="408" y="1373" font-size="11" fill="#475569">注册</text>
+
+    <line x1="460" y1="1369" x2="500" y2="1369" stroke="#9333ea" stroke-width="1.8" stroke-dasharray="5 3"/>
+    <text x="508" y="1373" font-size="11" fill="#475569">指标上报</text>
+
+    <circle cx="600" cy="1369" r="6" fill="#475569"/>
+    <text x="612" y="1373" font-size="11" fill="#475569">调用步骤编号</text>
+
+    <rect x="710" y="1363" width="14" height="12" rx="2" fill="url(#hdrRpc)"/>
+    <text x="730" y="1373" font-size="11" fill="#475569">分层模块（颜色对应层级）</text>
+
+    <rect x="910" y="1363" width="14" height="12" rx="2" fill="#1e3a8a" fill-opacity="0.3" stroke="#3b82f6" stroke-dasharray="3 2"/>
+    <text x="930" y="1373" font-size="11" fill="#475569">横切关注点（贯穿所有层）</text>
+
+    <text x="1620" y="1373" font-size="10.5" fill="#94a3b8" text-anchor="end">★ Triple 为 3.x 主推协议（gRPC 兼容 / HTTP/2）</text>
+  </g>
+</svg>
