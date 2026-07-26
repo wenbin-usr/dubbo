@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 1180" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif" text-rendering="geometricPrecision">
+<svg xmlns="http://www.w3.org/2000/svg" width="1340" height="1180" viewBox="0 0 1340 1180" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif" text-rendering="geometricPrecision">
   <title>Dubbo 泛化调用 (Generic Invoke) 整体流程</title>
   <desc>消费者通过 GenericService.$invoke 发起调用，经 GenericImplFilter 参数泛化，跨网络到达提供者，由 GenericFilter 反泛化后反射调用真实服务；响应按对称路径泛化/反泛化返回。</desc>
 
