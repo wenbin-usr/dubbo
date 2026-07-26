@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 1180" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif" text-rendering="geometricPrecision">
+  <title>Dubbo 泛化调用 (Generic Invoke) 整体流程</title>
+  <desc>消费者通过 GenericService.$invoke 发起调用，经 GenericImplFilter 参数泛化，跨网络到达提供者，由 GenericFilter 反泛化后反射调用真实服务；响应按对称路径泛化/反泛化返回。</desc>
+
+  <defs>
+    <marker id="arrSlate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7a8b"/>
+    </marker>
+    <marker id="arrAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b06a1a"/>
+    </marker>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="124%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2" result="off"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.16"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1340" height="1180" fill="#f4f7fb"/>
+
+  <!-- title -->
+  <text x="670" y="46" font-size="26" font-weight="700" fill="#1f2d3d" text-anchor="middle">Dubbo 泛化调用 (Generic Invoke) 整体流程</text>
+  <text x="670" y="72" font-size="13.5" fill="#6b7a8f" text-anchor="middle">消费者无需服务接口 SDK，通过 $invoke 与 PojoUtils 泛化／反泛化完成跨网络调用</text>
+
+  <!-- swimlanes -->
+  <rect x="50" y="100" width="520" height="930" rx="14" fill="#eaf2fb" stroke="#c5dcef" stroke-width="1.5"/>
+  <rect x="570" y="100" width="200" height="930" rx="14" fill="#fbf4e6" stroke="#f0dcaa" stroke-width="1.5"/>
+  <rect x="770" y="100" width="520" height="930" rx="14" fill="#eef8f2" stroke="#c7e4d3" stroke-width="1.5"/>
+
+  <!-- lane headers -->
+  <text x="310" y="130" font-size="16" font-weight="700" fill="#2c6cb0" text-anchor="middle">消费者 Consumer</text>
+  <text x="670" y="130" font-size="16" font-weight="700" fill="#b07d1e" text-anchor="middle">网络 Network</text>
+  <text x="1030" y="130" font-size="16" font-weight="700" fill="#2e8a57" text-anchor="middle">提供者 Provider</text>
+
+  <!-- ============ vertical connectors (drawn first, under blocks) ============ -->
+  <line x1="310" y1="218" x2="310" y2="243" stroke="#9aa7b5" stroke-width="2" marker-end="url(#arrSlate)"/>
+  <line x1="310" y1="315" x2="310" y2="345" stroke="#9aa7b5" stroke-width="2" marker-end="url(#arrSlate)"/>
+  <line x1="310" y1="880" x2="310" y2="915" stroke="#9aa7b5" stroke-width="2" marker-end="url(#arrSlate)"/>
+  <line x1="1030" y1="485" x2="1030" y2="560" stroke="#9aa7b5" stroke-width="2" marker-end="url(#arrSlate)"/>
+  <line x1="1030" y1="652" x2="1030" y2="740" stroke="#9aa7b5" stroke-width="2" marker-end="url(#arrSlate)"/>
+
+  <!-- ============ network arrows ============ -->
+  <!-- request -->
+  <line x1="548" y1="410" x2="792" y2="410" stroke="#b06a1a" stroke-width="3.2" marker-end="url(#arrAmber)"/>
+  <rect x="586" y="385" width="168" height="20" rx="10" fill="#ffffff" stroke="#e8c98a" stroke-width="1"/>
+  <text x="670" y="399" font-size="11.5" font-weight="700" fill="#b06a1a" text-anchor="middle">网络请求  $invoke(method, types, args)</text>
+  <!-- response -->
+  <line x1="792" y1="810" x2="548" y2="810" stroke="#b06a1a" stroke-width="3.2" marker-end="url(#arrAmber)"/>
+  <rect x="612" y="785" width="116" height="20" rx="10" fill="#ffffff" stroke="#e8c98a" stroke-width="1"/>
+  <text x="670" y="799" font-size="11.5" font-weight="700" fill="#b06a1a" text-anchor="middle">网络响应  Result</text>
+
+  <!-- ============ CONSUMER: C1 (step 1) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="75" y="158" width="470" height="60" rx="10" fill="#ffffff" stroke="#9dbde0" stroke-width="1.5"/>
+  </g>
+  <circle cx="98" cy="178" r="14" fill="#2c6cb0"/>
+  <text x="98" y="178" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">1</text>
+  <text x="320" y="182" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">业务代码发起调用</text>
+  <text x="320" y="205" font-size="12" fill="#44566b" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">genericService.$invoke(method, paramTypes, args)  ·  无需接口 SDK</text>
+
+  <!-- ============ CONSUMER: C2 (step 2) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="75" y="243" width="470" height="72" rx="10" fill="#ffffff" stroke="#9dbde0" stroke-width="1.5"/>
+  </g>
+  <circle cx="98" cy="263" r="14" fill="#2c6cb0"/>
+  <text x="98" y="263" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">2</text>
+  <text x="320" y="267" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">消费者代理 AbstractProxyFactory</text>
+  <text x="320" y="289" font-size="12" fill="#44566b" text-anchor="middle">generic=true 时，代理实现 GenericService 接口</text>
+  <text x="320" y="306" font-size="11.5" fill="#5a6b7d" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">getProxy(invoker, generic=true)</text>
+
+  <!-- ============ CONSUMER: C3 (step 3, filter) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="75" y="345" width="470" height="130" rx="10" fill="#eef4ff" stroke="#6f97d6" stroke-width="1.5"/>
+  </g>
+  <circle cx="98" cy="365" r="14" fill="#2c6cb0"/>
+  <text x="98" y="365" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">3</text>
+  <text x="320" y="369" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">GenericImplFilter.invoke</text>
+  <text x="320" y="386" font-size="10.5" fill="#8a99a8" text-anchor="middle">Consumer Filter · order=20000</text>
+  <!-- pill: 泛化 -->
+  <rect x="429" y="355" width="104" height="22" rx="11" fill="#fbe6c2" stroke="#e0a946" stroke-width="1"/>
+  <text x="481" y="366" font-size="10.5" font-weight="700" fill="#8a5a14" text-anchor="middle">泛化 generalize</text>
+  <text x="320" y="408" font-size="12" fill="#44566b" text-anchor="middle">① isCallingGenericImpl：调用 generic-impl 服务</text>
+  <text x="320" y="426" font-size="12" fill="#44566b" text-anchor="middle">② 参数泛化 PojoUtils.generalize(args)  POJO→Map</text>
+  <text x="320" y="444" font-size="12" fill="#44566b" text-anchor="middle">③ isMakingGenericCall：网关 $invoke 直调，校验序列化</text>
+  <text x="320" y="462" font-size="12" fill="#44566b" text-anchor="middle">④ 改写 $invoke/$invokeAsync，包装 [m, types[], args[]]</text>
+
+  <!-- ============ CONSUMER: C4 (step 7, filter) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="75" y="740" width="470" height="140" rx="10" fill="#eef4ff" stroke="#6f97d6" stroke-width="1.5"/>
+  </g>
+  <circle cx="98" cy="760" r="14" fill="#2c6cb0"/>
+  <text x="98" y="760" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">7</text>
+  <text x="320" y="764" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">GenericImplFilter.onResponse</text>
+  <text x="320" y="781" font-size="10.5" fill="#8a99a8" text-anchor="middle">Consumer Filter · 响应处理</text>
+  <rect x="429" y="750" width="104" height="22" rx="11" fill="#d3eef0" stroke="#57a7b0" stroke-width="1"/>
+  <text x="481" y="761" font-size="10.5" font-weight="700" fill="#1f6b73" text-anchor="middle">反泛化 realize</text>
+  <text x="320" y="803" font-size="12" fill="#44566b" text-anchor="middle">① 仅 GENERIC_IMPL_MARKER 调用执行</text>
+  <text x="320" y="821" font-size="12" fill="#44566b" text-anchor="middle">② 结果反泛化 PojoUtils.realize(value, returnType)</text>
+  <text x="320" y="839" font-size="12" fill="#44566b" text-anchor="middle">③ 按真实返回类型 ReflectUtils.getReturnTypes</text>
+  <text x="320" y="857" font-size="12" fill="#44566b" text-anchor="middle">④ Map → 真实 Java 对象（网关场景原样返回）</text>
+  <text x="320" y="875" font-size="12" fill="#44566b" text-anchor="middle">⑤ 异常：GenericException 还原为真实异常</text>
+
+  <!-- ============ CONSUMER: C5 (step 8) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="75" y="915" width="470" height="58" rx="10" fill="#ffffff" stroke="#9dbde0" stroke-width="1.5"/>
+  </g>
+  <circle cx="98" cy="935" r="14" fill="#2c6cb0"/>
+  <text x="98" y="935" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">8</text>
+  <text x="320" y="939" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">业务代码获得结果</text>
+  <text x="320" y="961" font-size="12" fill="#44566b" text-anchor="middle">反序列化后的真实 Java 对象</text>
+
+  <!-- ============ PROVIDER: P1 (step 4, filter) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="795" y="335" width="470" height="150" rx="10" fill="#ecf8f1" stroke="#6cb78f" stroke-width="1.5"/>
+  </g>
+  <circle cx="818" cy="355" r="14" fill="#2e8a57"/>
+  <text x="818" y="355" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">4</text>
+  <text x="1030" y="359" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">GenericFilter.invoke</text>
+  <text x="1030" y="376" font-size="10.5" fill="#8a99a8" text-anchor="middle">Provider Filter · order=-20000</text>
+  <rect x="1149" y="345" width="104" height="22" rx="11" fill="#d3eef0" stroke="#57a7b0" stroke-width="1"/>
+  <text x="1201" y="356" font-size="10.5" font-weight="700" fill="#1f6b73" text-anchor="middle">反泛化 realize</text>
+  <text x="1030" y="398" font-size="12" fill="#44566b" text-anchor="middle">① 触发：methodName=$invoke 且参数=3 且非 GenericService</text>
+  <text x="1030" y="416" font-size="12" fill="#44566b" text-anchor="middle">② 反射查找 findMethodByMethodSignature（classCache）</text>
+  <text x="1030" y="434" font-size="12" fill="#44566b" text-anchor="middle">③ 参数反泛化 PojoUtils.realize(args, paramTypes)</text>
+  <text x="1030" y="452" font-size="12" fill="#44566b" text-anchor="middle">④ Map/JSON/byte[] → 真实 Java 对象</text>
+  <text x="1030" y="470" font-size="12" fill="#44566b" text-anchor="middle">⑤ 构造 RpcInvocation，invoker.invoke 调真实服务</text>
+
+  <!-- ============ PROVIDER: P2 (step 5) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="795" y="560" width="470" height="92" rx="10" fill="#ffffff" stroke="#9fcdb4" stroke-width="1.5"/>
+  </g>
+  <circle cx="818" cy="580" r="14" fill="#2e8a57"/>
+  <text x="818" y="580" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">5</text>
+  <text x="1030" y="584" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">真实服务执行</text>
+  <text x="1030" y="606" font-size="12" fill="#44566b" text-anchor="middle">invoker.invoke(rpcInvocation) → 业务 Service</text>
+  <text x="1030" y="624" font-size="12" fill="#44566b" text-anchor="middle">执行业务逻辑，返回结果 / 抛出异常</text>
+
+  <!-- ============ PROVIDER: P3 (step 6, filter) ============ -->
+  <g filter="url(#shadow)">
+    <rect x="795" y="740" width="470" height="140" rx="10" fill="#ecf8f1" stroke="#6cb78f" stroke-width="1.5"/>
+  </g>
+  <circle cx="818" cy="760" r="14" fill="#2e8a57"/>
+  <text x="818" y="760" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle" dominant-baseline="central">6</text>
+  <text x="1030" y="764" font-size="14.5" font-weight="700" fill="#1f2d3d" text-anchor="middle">GenericFilter.onResponse</text>
+  <text x="1030" y="781" font-size="10.5" fill="#8a99a8" text-anchor="middle">Provider Filter · 响应处理</text>
+  <rect x="1149" y="750" width="104" height="22" rx="11" fill="#fbe6c2" stroke="#e0a946" stroke-width="1"/>
+  <text x="1201" y="761" font-size="10.5" font-weight="700" fill="#8a5a14" text-anchor="middle">泛化 generalize</text>
+  <text x="1030" y="803" font-size="12" fill="#44566b" text-anchor="middle">① 结果泛化 PojoUtils.generalize(value) → Map</text>
+  <text x="1030" y="821" font-size="12" fill="#44566b" text-anchor="middle">② 或 nativejava／bean／protobuf／gson.toJson</text>
+  <text x="1030" y="839" font-size="12" fill="#44566b" text-anchor="middle">③ raw.return：直接返回原始结果不转换</text>
+  <text x="1030" y="857" font-size="12" fill="#44566b" text-anchor="middle">④ 异常包装为 GenericException（含异常类名）</text>
+
+  <!-- ============ legend: generic serialization modes ============ -->
+  <rect x="50" y="1045" width="1240" height="112" rx="12" fill="#ffffff" stroke="#dde7f2" stroke-width="1.5"/>
+  <text x="70" y="1071" font-size="14" font-weight="700" fill="#1f2d3d">generic 序列化模式（URL 参数 generic=）</text>
+
+  <!-- chip 0 default -->
+  <rect x="70" y="1083" width="180" height="46" rx="8" fill="#eef4ff" stroke="#b9cdf0" stroke-width="1"/>
+  <text x="160" y="1100" font-size="11.5" font-weight="700" fill="#1f2d3d" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">true / default</text>
+  <text x="160" y="1119" font-size="10.5" fill="#5a6b7d" text-anchor="middle">PojoUtils POJO↔Map（默认）</text>
+  <!-- chip 1 nativejava -->
+  <rect x="274" y="1083" width="180" height="46" rx="8" fill="#fdeeee" stroke="#f0c4c4" stroke-width="1"/>
+  <text x="364" y="1100" font-size="11.5" font-weight="700" fill="#1f2d3d" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">nativejava</text>
+  <text x="364" y="1119" font-size="10.5" fill="#5a6b7d" text-anchor="middle">Java 原生序列化 byte[]</text>
+  <!-- chip 2 bean -->
+  <rect x="478" y="1083" width="180" height="46" rx="8" fill="#f3f0fb" stroke="#d6cef0" stroke-width="1"/>
+  <text x="568" y="1100" font-size="11.5" font-weight="700" fill="#1f2d3d" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">bean</text>
+  <text x="568" y="1119" font-size="10.5" fill="#5a6b7d" text-anchor="middle">JavaBeanDescriptor</text>
+  <!-- chip 3 protobuf -->
+  <rect x="682" y="1083" width="180" height="46" rx="8" fill="#eaf6f3" stroke="#bfe0d6" stroke-width="1"/>
+  <text x="772" y="1100" font-size="11.5" font-weight="700" fill="#1f2d3d" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">protobuf</text>
+  <text x="772" y="1119" font-size="10.5" fill="#5a6b7d" text-anchor="middle">Protobuf 序列化</text>
+  <!-- chip 4 gson -->
+  <rect x="886" y="1083" width="180" height="46" rx="8" fill="#fdf6ea" stroke="#f0e0bd" stroke-width="1"/>
+  <text x="976" y="1100" font-size="11.5" font-weight="700" fill="#1f2d3d" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">gson</text>
+  <text x="976" y="1119" font-size="10.5" fill="#5a6b7d" text-anchor="middle">JSON 字符串</text>
+  <!-- chip 5 raw.return -->
+  <rect x="1090" y="1083" width="180" height="46" rx="8" fill="#f1f3f6" stroke="#d4dbe4" stroke-width="1"/>
+  <text x="1180" y="1100" font-size="11.5" font-weight="700" fill="#1f2d3d" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">raw.return.value</text>
+  <text x="1180" y="1119" font-size="10.5" fill="#5a6b7d" text-anchor="middle">返回原始结果不转换</text>
+
+  <text x="70" y="1147" font-size="10.5" fill="#8a99a8">注：nativejava 需开启 enable-native-java-generic-serialize 以防反序列化攻击；泛化调用常用于网关、测试平台等无需接口 SDK 的场景。</text>
+
+</svg>

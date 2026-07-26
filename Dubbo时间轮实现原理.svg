@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1140" viewBox="0 0 1500 1140" font-family="ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1e293b" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker>
+    <marker id="arrowb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker>
+    <marker id="arrowg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/></marker>
+    <marker id="arrowr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker>
+    <marker id="arrowp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+    <style>
+      .title{font-size:27px;font-weight:700;fill:#0f172a}
+      .subtitle{font-size:13px;fill:#64748b}
+      .badge{font-size:11px;font-weight:600;fill:#1e3a8a}
+      .section{font-size:12.5px;font-weight:700;fill:#64748b;letter-spacing:.6px}
+      .iface-title{font-size:13px;font-weight:600;fill:#fff}
+      .iface-method{font-size:11px;fill:#334155}
+      .cardtitle{font-size:14px;font-weight:600;fill:#fff}
+      .fld{font-size:12px;font-weight:600;fill:#1f2937}
+      .fldd{font-size:11px;fill:#6b7280}
+      .hd{font-size:11.5px;font-weight:700;fill:#475569;letter-spacing:.3px}
+      .mono{font-size:11.5px;fill:#334155}
+      .small{font-size:10.5px;fill:#64748b}
+      .stepnum{font-size:11px;font-weight:700;fill:#fff}
+      .stepm{font-size:11.5px;font-weight:600;fill:#1e3a8a}
+      .stepd{font-size:10px;fill:#475569}
+      .bkt{font-size:10.5px;font-weight:600;fill:#1e3a8a}
+      .foot{font-size:11px;fill:#64748b}
+      .note{font-size:11px;fill:#475569}
+      .ringlbl{font-size:10px;font-weight:600;fill:#475569}
+    </style>
+  </defs>
+
+  <!-- background -->
+  <rect width="1500" height="1140" fill="#f4f6fa"/>
+  <rect width="1500" height="6" fill="#2563eb"/>
+
+  <!-- ============ TITLE ============ -->
+  <text x="40" y="46" class="title">Dubbo 时间轮实现原理</text>
+  <text x="40" y="68" class="subtitle">HashedWheelTimer · 单层哈希时间轮调度器 · dubbo-common/timer (fork of Netty HashedWheelTimer)</text>
+  <g transform="translate(1186,30)">
+    <rect width="216" height="26" rx="13" fill="#e0e7ff" stroke="#c7d2fe"/>
+    <circle cx="15" cy="13" r="4" fill="#2563eb"/>
+    <text x="26" y="17" class="badge">1 Timer : 1 Worker 线程</text>
+  </g>
+
+  <!-- ============ ① INTERFACES ============ -->
+  <text x="40" y="105" class="section">① 接口层  INTERFACES</text>
+  <g filter="url(#shadow)">
+    <rect x="40" y="115" width="410" height="72" rx="9" fill="#fff" stroke="#d8dee9"/>
+    <path d="M40,124 Q40,115 49,115 L441,115 Q450,115 450,124 L450,140 L40,140 Z" fill="#475569"/>
+    <text x="54" y="133" class="iface-title">«interface»  Timer</text>
+    <text x="54" y="160" class="iface-method">+ newTimeout(task, delay, unit) : Timeout</text>
+    <text x="54" y="177" class="iface-method">+ stop() : Set&lt;Timeout&gt;      + isStop() : boolean</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="515" y="115" width="410" height="72" rx="9" fill="#fff" stroke="#d8dee9"/>
+    <path d="M515,124 Q515,115 524,115 L916,115 Q925,115 925,124 L925,140 L515,140 Z" fill="#475569"/>
+    <text x="529" y="133" class="iface-title">«interface»  Timeout</text>
+    <text x="529" y="160" class="iface-method">timer() · task() · isExpired() · isCancelled()</text>
+    <text x="529" y="177" class="iface-method">+ cancel() : boolean</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="990" y="115" width="410" height="72" rx="9" fill="#fff" stroke="#d8dee9"/>
+    <path d="M990,124 Q990,115 999,115 L1391,115 Q1400,115 1400,124 L1400,140 L990,140 Z" fill="#475569"/>
+    <text x="1004" y="133" class="iface-title">«interface»  TimerTask</text>
+    <text x="1004" y="160" class="iface-method">+ run(Timeout timeout) : void</text>
+    <text x="1004" y="177" class="iface-method">用户实现的待调度任务</text>
+  </g>
+  <!-- implements arrow Timer -> HashedWheelTimer -->
+  <path d="M245,187 L245,212 L705,212 L705,239" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text x="300" y="205" class="small" fill="#94a3b8">implements (HashedWheelTimer 实现 Timer)</text>
+
+  <!-- ============ ② WHEEL RING ============ -->
+  <text x="40" y="232" class="section">② 时间轮环形结构  WHEEL</text>
+  <g filter="url(#shadow)">
+    <rect x="40" y="242" width="430" height="388" rx="10" fill="#fff" stroke="#d8dee9"/>
+  </g>
+
+  <!-- 12 sectors (R=138 outer, r=95 inner, center 250,430) -->
+  <g stroke="#fff" stroke-width="1.5">
+    <path d="M250,292 A138,138 0 0 1 319,310.5 L297.5,347.7 A95,95 0 0 0 250,335 Z" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <path d="M319,310.5 A138,138 0 0 1 369.5,361 L332.3,382.5 A95,95 0 0 0 297.5,347.7 Z" fill="#eef2f7"/>
+    <path d="M369.5,361 A138,138 0 0 1 388,430 L345,430 A95,95 0 0 0 332.3,382.5 Z" fill="#e6ebf2"/>
+    <path d="M388,430 A138,138 0 0 1 369.5,499 L332.3,477.5 A95,95 0 0 0 345,430 Z" fill="#eef2f7"/>
+    <path d="M369.5,499 A138,138 0 0 1 319,549.5 L297.5,512.3 A95,95 0 0 0 332.3,477.5 Z" fill="#e6ebf2"/>
+    <path d="M319,549.5 A138,138 0 0 1 250,568 L250,525 A95,95 0 0 0 297.5,512.3 Z" fill="#eef2f7"/>
+    <path d="M250,568 A138,138 0 0 1 181,549.5 L202.5,512.3 A95,95 0 0 0 250,525 Z" fill="#e6ebf2"/>
+    <path d="M181,549.5 A138,138 0 0 1 130.5,499 L167.7,477.5 A95,95 0 0 0 202.5,512.3 Z" fill="#eef2f7"/>
+    <path d="M130.5,499 A138,138 0 0 1 112,430 L155,430 A95,95 0 0 0 167.7,477.5 Z" fill="#e6ebf2"/>
+    <path d="M112,430 A138,138 0 0 1 130.5,361 L167.7,382.5 A95,95 0 0 0 155,430 Z" fill="#eef2f7"/>
+    <path d="M130.5,361 A138,138 0 0 1 181,310.5 L202.5,347.7 A95,95 0 0 0 167.7,382.5 Z" fill="#e6ebf2"/>
+    <path d="M181,310.5 A138,138 0 0 1 250,292 L250,335 A95,95 0 0 0 202.5,347.7 Z" fill="#eef2f7"/>
+  </g>
+
+  <!-- rotation direction arc (decorative, top-right; drawn above sectors so fills don't cover it) -->
+  <path d="M252,296 A134,134 0 0 1 384,430" fill="none" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="3 3"/>
+  <text x="345" y="338" class="small" fill="#64748b" transform="rotate(35 345 338)">tick++ 顺时针</text>
+
+  <!-- bucket numbers (mid radius 116.5) -->
+  <g text-anchor="middle" dominant-baseline="central" class="ringlbl">
+    <text x="280" y="318">0</text><text x="332" y="348">1</text><text x="363" y="400">2</text><text x="363" y="460">3</text>
+    <text x="332" y="512">4</text><text x="280" y="542">5</text><text x="220" y="542">6</text><text x="168" y="512">7</text>
+    <text x="137" y="460">8</text><text x="137" y="400">9</text><text x="168" y="348">10</text><text x="220" y="318">11</text>
+  </g>
+  <text x="300" y="333" class="small" fill="#2563eb" font-weight="700">current</text>
+
+  <!-- pending task dots (HashedWheelTimeouts in buckets) -->
+  <g fill="#0d9488">
+    <circle cx="358" cy="452" r="3"/><circle cx="368" cy="462" r="3"/>
+    <circle cx="160" cy="518" r="3"/>
+    <circle cx="338" cy="506" r="3"/>
+  </g>
+
+  <!-- center hub -->
+  <circle cx="250" cy="430" r="42" fill="#fff" stroke="#cbd5e1"/>
+  <circle cx="250" cy="430" r="42" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="2 3" opacity=".5"/>
+  <text x="250" y="422" text-anchor="middle" class="bkt">tick</text>
+  <text x="250" y="438" text-anchor="middle" font-size="13" font-weight="700" fill="#2563eb">= N</text>
+  <text x="250" y="452" text-anchor="middle" class="small">idx=N&amp;mask</text>
+
+  <!-- tick pointer into bucket 0 -->
+  <line x1="269" y1="393" x2="300" y2="333" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrowb)"/>
+
+  <!-- formulas below ring -->
+  <text x="58" y="584" class="mono">wheel.length = 2ⁿ (默认 512)   ·   mask = length − 1</text>
+  <text x="58" y="600" class="mono">idx = (int)(tick &amp; mask)  → 位与取模 O(1)</text>
+  <text x="58" y="616" class="small">桶内 = ● ⇄ ● ⇄ ● ⇄ ●  (HashedWheelTimeout 双向链表)</text>
+
+  <!-- ============ ③ HashedWheelTimer ============ -->
+  <text x="490" y="232" class="section">③ 核心类  HashedWheelTimer</text>
+  <g filter="url(#shadow)">
+    <rect x="490" y="242" width="430" height="388" rx="10" fill="#fff" stroke="#d8dee9"/>
+    <path d="M490,252 Q490,242 500,242 L910,242 Q920,242 920,252 L920,278 L490,278 Z" fill="#2563eb"/>
+    <text x="504" y="266" class="cardtitle">HashedWheelTimer  implements Timer</text>
+  </g>
+  <text x="504" y="298" class="hd">核心字段  FIELDS</text>
+  <text x="504" y="318"><tspan class="fld">wheel</tspan><tspan class="fldd">   : HashedWheelBucket[] - 时间轮环形数组</tspan></text>
+  <text x="504" y="338"><tspan class="fld">mask</tspan><tspan class="fldd">  = length − 1 - 位与取模 (长度为 2ⁿ)</tspan></text>
+  <text x="504" y="358"><tspan class="fld">tickDuration</tspan><tspan class="fldd"> : long - 每 tick 时长 (默认 100ms)</tspan></text>
+  <text x="504" y="378"><tspan class="fld">timeouts</tspan><tspan class="fldd"> : Queue - 待入轮任务 (生产者→Worker)</tspan></text>
+  <text x="504" y="398"><tspan class="fld">cancelledTimeouts</tspan><tspan class="fldd"> : Queue - 待删除任务</tspan></text>
+  <text x="504" y="418"><tspan class="fld">pendingTimeouts</tspan><tspan class="fldd"> / maxPendingTimeouts - 背压计数</tspan></text>
+  <text x="504" y="438"><tspan class="fld">startTime</tspan><tspan class="fldd"> : volatile long - Worker 时间锚点</tspan></text>
+  <text x="504" y="458"><tspan class="fld">workerState</tspan><tspan class="fldd"> : 0/1/2 - CAS 状态机</tspan></text>
+  <line x1="504" y1="474" x2="906" y2="474" stroke="#e5e7eb"/>
+  <text x="504" y="494" class="hd">关键方法  METHODS</text>
+  <text x="504" y="514"><tspan class="fld">newTimeout</tspan><tspan class="fldd">(task, delay, unit)</tspan></text>
+  <text x="516" y="530" class="fldd">→ 计算 deadline，投入 timeouts 队列（不改轮）</text>
+  <text x="504" y="552"><tspan class="fld">start()</tspan></text>
+  <text x="516" y="568" class="fldd">→ CAS INIT→STARTED，阻塞等待 startTime 就绪</text>
+  <text x="504" y="590"><tspan class="fld">stop()</tspan></text>
+  <text x="516" y="606" class="fldd">→ CAS→SHUTDOWN，返回未处理任务 Set</text>
+  <text x="504" y="616"><tspan class="fld">createWheel</tspan><tspan class="fldd">(n) → normalizeTicksPerWheel 归一为 2ⁿ</tspan></text>
+
+  <!-- ============ ④ CONCURRENCY ============ -->
+  <text x="950" y="232" class="section">④ 并发模型  CONCURRENCY</text>
+  <g filter="url(#shadow)">
+    <rect x="950" y="242" width="450" height="388" rx="10" fill="#fff" stroke="#d8dee9"/>
+    <path d="M950,252 Q950,242 960,242 L1390,242 Q1400,242 1400,252 L1400,278 L950,278 Z" fill="#475569"/>
+    <text x="964" y="266" class="cardtitle">单 Worker 线程 · 无锁桶</text>
+  </g>
+  <rect x="980" y="296" width="390" height="40" rx="7" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="1175" y="320" text-anchor="middle" class="note" fill="#1e3a8a">调用方线程 (Producer) - newTimeout() / cancel()</text>
+  <line x1="1175" y1="338" x2="1175" y2="358" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arrowb)"/>
+  <text x="1185" y="352" class="small" fill="#2563eb">投入</text>
+  <rect x="980" y="360" width="390" height="38" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="1175" y="384" text-anchor="middle" class="mono">timeouts : LinkedBlockingQueue</text>
+  <line x1="1175" y1="400" x2="1175" y2="420" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#arrowp)"/>
+  <text x="1185" y="414" class="small" fill="#7c3aed">transfer</text>
+  <rect x="980" y="422" width="390" height="42" rx="7" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="1175" y="447" text-anchor="middle" class="note" fill="#5b21b6">Worker 线程 (单一, 独占整轮) - 仅它读写 wheel/链表</text>
+  <!-- cancel feedback loop -->
+  <path d="M1380,438 C1432,438 1432,360 1380,360" fill="none" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrowr)"/>
+  <text x="1440" y="402" class="small" fill="#dc2626">cancel→</text>
+  <text x="1440" y="416" class="small" fill="#dc2626">cancelled</text>
+  <text x="1440" y="430" class="small" fill="#dc2626">Timeouts</text>
+  <line x1="980" y1="486" x2="1380" y2="486" stroke="#e5e7eb"/>
+  <text x="980" y="506" class="hd">并发要点</text>
+  <g class="note">
+    <text x="980" y="526">• 桶 + 双向链表 仅 Worker 线程访问 → 无锁</text>
+    <text x="980" y="546">• workerState 经 AtomicIntegerFieldUpdater CAS</text>
+    <text x="980" y="566">• HashedWheelTimeout.state 经 CAS</text>
+    <text x="992" y="582" class="fldd">(INIT 0 → CANCELLED 1 / EXPIRED 2)</text>
+    <text x="980" y="602">• 生产者只通过两个队列与 Worker 通信</text>
+  </g>
+
+  <!-- ============ ⑤ TICK LOOP ============ -->
+  <text x="40" y="648" class="section">⑤ Worker.run()  Tick 循环  (每 tick 顺序执行)</text>
+  <g filter="url(#shadow)">
+    <rect x="40" y="658" width="1360" height="120" rx="10" fill="#fff" stroke="#d8dee9"/>
+  </g>
+  <!-- step 1 -->
+  <g transform="translate(60,678)">
+    <circle cx="0" cy="0" r="11" fill="#2563eb"/><text x="0" y="3.5" text-anchor="middle" class="stepnum">1</text>
+    <text x="20" y="-2" class="stepm">waitForNextTick()</text>
+    <text x="20" y="13" class="stepd">计算下 tick deadline</text>
+    <text x="20" y="26" class="stepd">Thread.sleep 至边界</text>
+    <text x="20" y="39" class="stepd">返回 deadline</text>
+  </g>
+  <line x1="222" y1="708" x2="282" y2="708" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <!-- step 2 -->
+  <g transform="translate(298,678)">
+    <circle cx="0" cy="0" r="11" fill="#16a34a"/><text x="0" y="3.5" text-anchor="middle" class="stepnum">2</text>
+    <text x="20" y="-2" class="stepm">processCancelledTasks()</text>
+    <text x="20" y="13" class="stepd">排空 cancelledTimeouts</text>
+    <text x="20" y="26" class="stepd">逐个 bucket.remove</text>
+    <text x="20" y="39" class="stepd">摘链 + pendingTimeouts--</text>
+  </g>
+  <line x1="566" y1="708" x2="626" y2="708" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <!-- step 3 -->
+  <g transform="translate(642,678)">
+    <circle cx="0" cy="0" r="11" fill="#7c3aed"/><text x="0" y="3.5" text-anchor="middle" class="stepnum">3</text>
+    <text x="20" y="-2" class="stepm">transferTimeoutsToBuckets()</text>
+    <text x="20" y="13" class="stepd">从 timeouts 取 ≤100000</text>
+    <text x="20" y="26" class="stepd">算 remainingRounds</text>
+    <text x="20" y="39" class="stepd">stopIndex=ticks&amp;mask → 入桶</text>
+  </g>
+  <line x1="924" y1="708" x2="984" y2="708" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <!-- step 4 -->
+  <g transform="translate(1000,678)">
+    <circle cx="0" cy="0" r="11" fill="#d97706"/><text x="0" y="3.5" text-anchor="middle" class="stepnum">4</text>
+    <text x="20" y="-2" class="stepm">bucket.expireTimeouts()</text>
+    <text x="20" y="13" class="stepd">遍历当前桶链表:</text>
+    <text x="20" y="26" class="stepd">到期→task.run, 取消→remove</text>
+    <text x="20" y="39" class="stepd">否则 remainingRounds--</text>
+  </g>
+  <line x1="1284" y1="708" x2="1344" y2="708" stroke="#475569" stroke-width="1.4" marker-end="url(#arrow)"/>
+  <!-- step 5 -->
+  <g transform="translate(1360,678)">
+    <circle cx="0" cy="0" r="11" fill="#0d9488"/><text x="0" y="3.5" text-anchor="middle" class="stepnum">5</text>
+    <text x="-8" y="18" class="stepm" text-anchor="end">tick++</text>
+    <text x="-8" y="33" class="stepd" text-anchor="end">推进指针</text>
+  </g>
+  <!-- loop back arrow -->
+  <path d="M1372,724 C1372,764 60,764 60,724" fill="none" stroke="#0d9488" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#arrow)"/>
+  <text x="710" y="769" text-anchor="middle" class="small" fill="#0d9488">循环  while (workerState == STARTED)</text>
+
+  <!-- ============ ⑥ INNER CLASSES ============ -->
+  <text x="40" y="800" class="section">⑥ 三个内部类  (均嵌套于 HashedWheelTimer)</text>
+  <!-- Worker -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="810" width="440" height="240" rx="10" fill="#fff" stroke="#d8dee9"/>
+    <path d="M40,820 Q40,810 50,810 L470,810 Q480,810 480,820 L480,840 L40,840 Z" fill="#7c3aed"/>
+    <text x="54" y="829" class="cardtitle">Worker  implements Runnable</text>
+  </g>
+  <text x="54" y="858" class="hd">字段</text>
+  <text x="54" y="876"><tspan class="fld">tick</tspan><tspan class="fldd"> : long - 单调递增 tick 计数</tspan></text>
+  <text x="54" y="894"><tspan class="fld">unprocessedTimeouts</tspan><tspan class="fldd"> : Set - stop() 返回</tspan></text>
+  <text x="54" y="916" class="hd">方法</text>
+  <text x="54" y="934"><tspan class="fld">run()</tspan><tspan class="fldd"> - 设置 startTime, 跑 ⑤ 循环</tspan></text>
+  <text x="54" y="952"><tspan class="fld">waitForNextTick()</tspan><tspan class="fldd"> - 算 deadline 并 sleep</tspan></text>
+  <text x="54" y="970"><tspan class="fld">transferTimeoutsToBuckets()</tspan></text>
+  <text x="66" y="986" class="fldd">每 tick 最多迁移 100000 个任务</text>
+  <text x="54" y="1004"><tspan class="fld">processCancelledTasks()</tspan><tspan class="fldd"> - 清理取消</tspan></text>
+  <text x="54" y="1022"><tspan class="fld">unprocessedTimeouts()</tspan><tspan class="fldd"> - 返回未处理</tspan></text>
+
+  <!-- HashedWheelTimeout -->
+  <g filter="url(#shadow)">
+    <rect x="500" y="810" width="440" height="240" rx="10" fill="#fff" stroke="#d8dee9"/>
+    <path d="M500,820 Q500,810 510,810 L930,810 Q940,810 940,820 L940,840 L500,840 Z" fill="#0d9488"/>
+    <text x="514" y="829" class="cardtitle">HashedWheelTimeout  implements Timeout</text>
+  </g>
+  <text x="514" y="858" class="hd">字段 (任务包装 + 链表节点)</text>
+  <text x="514" y="876"><tspan class="fld">state</tspan><tspan class="fldd"> : INIT 0 / CANCELLED 1 / EXPIRED 2 (CAS)</tspan></text>
+  <text x="514" y="894"><tspan class="fld">deadline</tspan><tspan class="fldd"> : long - 绝对到期时间</tspan></text>
+  <text x="514" y="912"><tspan class="fld">remainingRounds</tspan><tspan class="fldd"> : long - 剩余圈数</tspan></text>
+  <text x="514" y="930"><tspan class="fld">next / prev</tspan><tspan class="fldd"> - 双向链表指针</tspan></text>
+  <text x="514" y="948"><tspan class="fld">bucket</tspan><tspan class="fldd"> - 所属桶 (支持 O(1) 删除)</tspan></text>
+  <text x="514" y="970" class="hd">方法</text>
+  <text x="514" y="988"><tspan class="fld">cancel()</tspan><tspan class="fldd"> - CAS→CANCELLED，投入 cancelledTimeouts</tspan></text>
+  <text x="668" y="1004" class="fldd">(延迟删除，避免锁桶)</text>
+  <text x="514" y="1022"><tspan class="fld">expire()</tspan><tspan class="fldd"> - CAS→EXPIRED，执行 task.run(this)</tspan></text>
+  <text x="514" y="1040"><tspan class="fld">remove()</tspan><tspan class="fldd"> - 摘链 + pendingTimeouts--</tspan></text>
+
+  <!-- HashedWheelBucket -->
+  <g filter="url(#shadow)">
+    <rect x="960" y="810" width="440" height="240" rx="10" fill="#fff" stroke="#d8dee9"/>
+    <path d="M960,820 Q960,810 970,810 L1390,810 Q1400,810 1400,820 L1400,840 L960,840 Z" fill="#d97706"/>
+    <text x="974" y="829" class="cardtitle">HashedWheelBucket  (轮上的槽)</text>
+  </g>
+  <text x="974" y="858" class="hd">字段</text>
+  <text x="974" y="876"><tspan class="fld">head / tail</tspan><tspan class="fldd"> : HashedWheelTimeout - 链表首尾</tspan></text>
+  <text x="974" y="898" class="hd">方法</text>
+  <text x="974" y="916"><tspan class="fld">addTimeout(t)</tspan><tspan class="fldd"> - 追加尾部, 置 bucket</tspan></text>
+  <text x="974" y="936"><tspan class="fld">expireTimeouts(deadline)</tspan><tspan class="fldd"> - 遍历链表:</tspan></text>
+  <text x="986" y="954" class="fldd">• remainingRounds≤0 → expire (运行任务)</text>
+  <text x="986" y="972" class="fldd">• 已取消 → remove (摘链)</text>
+  <text x="986" y="990" class="fldd">• 否则 → remainingRounds-- (留待下圈)</text>
+  <text x="974" y="1010"><tspan class="fld">remove(t)</tspan><tspan class="fldd"> - O(1) 摘链, 维护 head/tail</tspan></text>
+  <text x="974" y="1028"><tspan class="fld">clearTimeouts(set)</tspan><tspan class="fldd"> - shutdown 转移未到期</tspan></text>
+
+  <!-- relation arrows between inner classes -->
+  <line x1="480" y1="930" x2="500" y2="930" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+  <text x="490" y="924" text-anchor="middle" class="small" fill="#94a3b8" style="font-size:9px">管理</text>
+  <line x1="940" y1="930" x2="960" y2="930" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+  <text x="950" y="924" text-anchor="middle" class="small" fill="#94a3b8" style="font-size:9px">装入</text>
+
+  <!-- ============ FOOTER ============ -->
+  <line x1="40" y1="1072" x2="1400" y2="1072" stroke="#e5e7eb"/>
+  <text x="40" y="1095" class="foot">源码：dubbo-common/src/main/java/org/apache/dubbo/common/timer/HashedWheelTimer.java · 单文件含 3 个内部类 (Worker / HashedWheelTimeout / HashedWheelBucket)，实例上限 64</text>
+  <text x="40" y="1115" class="foot">使用场景：心跳/重连 (AbstractTimerTask) · RPC 超时 (DefaultFuture) · Triple Deadline (DeadlineFuture) · 注册重试 (FailbackRegistry) · 失败重试 (FailbackClusterInvoker)</text>
+</svg>
