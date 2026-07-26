@@ -44,8 +44,8 @@
   <!-- ============ network arrows ============ -->
   <!-- request -->
   <line x1="548" y1="410" x2="792" y2="410" stroke="#b06a1a" stroke-width="3.2" marker-end="url(#arrAmber)"/>
-  <rect x="586" y="385" width="168" height="20" rx="10" fill="#ffffff" stroke="#e8c98a" stroke-width="1"/>
-  <text x="670" y="399" font-size="11.5" font-weight="700" fill="#b06a1a" text-anchor="middle">网络请求  $invoke(method, types, args)</text>
+  <rect x="558" y="385" width="224" height="20" rx="10" fill="#ffffff" stroke="#e8c98a" stroke-width="1"/>
+  <text x="670" y="399" font-size="10.5" font-weight="700" fill="#b06a1a" text-anchor="middle">网络请求  $invoke(method, types, args)</text>
   <!-- response -->
   <line x1="792" y1="810" x2="548" y2="810" stroke="#b06a1a" stroke-width="3.2" marker-end="url(#arrAmber)"/>
   <rect x="612" y="785" width="116" height="20" rx="10" fill="#ffffff" stroke="#e8c98a" stroke-width="1"/>
