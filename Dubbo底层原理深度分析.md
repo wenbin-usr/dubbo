@@ -1664,11 +1664,11 @@ ZK 节点结构：
 
 ```mermaid
 graph TD
-    root[/dubbo] --> svc[/service-name]
-    svc --> providers[/providers]
-    svc --> consumers[/consumers]
-    svc --> routers[/routers]
-    svc --> configurators[/configurators]
+    root["/dubbo"] --> svc["/service-name"]
+    svc --> providers["/providers"]
+    svc --> consumers["/consumers"]
+    svc --> routers["/routers"]
+    svc --> configurators["/configurators"]
     providers --> p1["url1 临时节点"]
     providers --> p2["url2 临时节点"]
     providers --> p3["urlN 临时节点"]
